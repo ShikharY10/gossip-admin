@@ -1,0 +1,23 @@
+{
+    "development": {
+        "virtual": {
+            "API_SERVICE_ADDRESS": "10.0.2.2:10221",
+            "GATEWAY_SERVICE_ADDRESS": "10.0.2.2:10222"
+        },
+        "real": {
+            "API_SERVICE_ADDRESS": "127.0.0.1:10221",
+            "GATEWAY_SERVICE_ADDRESS": "127.0.0.1:10222"
+        }
+    },
+    "production": {
+        "virtual": {
+            "API_SERVICE_ADDRESS": "<NOT_AVAILABLE>:10221",
+            "GATEWAY_SERVICE_ADDRESS": "<NOT_AVAILABLE>:10222"
+        },
+        "real": {
+            "API_SERVICE_ADDRESS": "<NOT_AVAILABLE>:10221",
+            "GATEWAY_SERVICE_ADDRESS": "<NOT_AVAILABLE>:10222"
+        }
+    },
+    "testing": {}
+}
