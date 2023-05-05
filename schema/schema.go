@@ -1,5 +1,7 @@
 package schema
 
+import "github.com/gorilla/websocket"
+
 type Packet struct {
 	NodeName string `json:"name"`
 	Type     string `json:"type"`
@@ -20,4 +22,5 @@ type Service struct {
 	Name string
 	Host string
 	Port string
+	Conn *websocket.Conn
 }

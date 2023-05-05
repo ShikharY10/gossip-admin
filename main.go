@@ -20,10 +20,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func removeServices(channel chan string, handle *handler.Handler) {
-	for serviceName := range channel {
-		handle.RemoveService(serviceName)
-		handle.Cache.RemoveNode(serviceName)
+func removeServices(channel chan schema.Service, handle *handler.Handler) {
+	for service := range channel {
+		handle.RemoveService(service.Name)
+		handle.Cache.RemoveNode(service.Type, service.Name)
 	}
 }
 
@@ -109,7 +109,7 @@ func main() {
 			RedisClient: db.RedisDB,
 		},
 		Env:      ENV,
-		Services: []schema.Service{},
+		Services: []*schema.Service{},
 	}
 
 	controller := controllers.WebSocket{

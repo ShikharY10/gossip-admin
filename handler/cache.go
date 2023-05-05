@@ -40,13 +40,13 @@ func (cache *CacheHandler) GetRandomEngineName() (string, error) {
 	return engines[random], nil
 }
 
-func (cache *CacheHandler) RegisterNode(nodeName string) error {
-	result := cache.RedisClient.SAdd("gateways", nodeName)
+func (cache *CacheHandler) RegisterNode(nodeType string, nodeName string) error {
+	result := cache.RedisClient.SAdd(nodeType, nodeName)
 	return result.Err()
 }
 
-func (cache *CacheHandler) RemoveNode(nodeName string) error {
-	result := cache.RedisClient.SRem("gateways", nodeName)
+func (cache *CacheHandler) RemoveNode(nodeType string, nodeName string) error {
+	result := cache.RedisClient.SRem(nodeType, nodeName)
 	return result.Err()
 }
 

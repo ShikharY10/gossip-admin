@@ -9,7 +9,7 @@ type Handler struct {
 	Database *DataBaseHandler
 	Cache    *CacheHandler
 	Env      *config.ENV
-	Services []schema.Service
+	Services []*schema.Service
 }
 
 func (handle *Handler) RemoveService(serviceName string) {

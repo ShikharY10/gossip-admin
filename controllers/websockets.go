@@ -21,11 +21,6 @@ func (ctrl *WebSocket) WebSocketHandler(c *gin.Context) {
 	name := c.Query("name")
 	port := c.Query("port")
 
-	conn, err := ctrl._webSocketHandler(c.Writer, c.Request)
-	if err != nil {
-		log.Println(err.Error())
-	}
-
 	service := schema.Service{
 		Type: serviceType,
 		Name: name,
@@ -33,24 +28,32 @@ func (ctrl *WebSocket) WebSocketHandler(c *gin.Context) {
 		Port: port,
 	}
 
-	ctrl.Handler.Services = append(ctrl.Handler.Services, service)
+	_service, err := ctrl._webSocketHandler(c.Writer, c.Request, service)
+	if err != nil {
+		log.Println(err.Error())
+	}
 
-	ctrl.Epoll.Lock.Lock()
-	ctrl.Epoll.Clients[name] = conn
-	ctrl.Epoll.Lock.Unlock()
+	ctrl.Handler.Services = append(ctrl.Handler.Services, _service)
+
+	// ctrl.Epoll.Lock.Lock()
+	// ctrl.Epoll.Clients[name] = conn
+	// ctrl.Epoll.Lock.Unlock()
+
+	ctrl.Handler.Cache.RegisterNode(service.Type, service.Name)
 }
 
-func (ctrl *WebSocket) _webSocketHandler(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
+func (ctrl *WebSocket) _webSocketHandler(w http.ResponseWriter, r *http.Request, service schema.Service) (*schema.Service, error) {
 	// Upgrade connection
 	upgrader := websocket.Upgrader{}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return nil, err
 	}
-	if err := ctrl.Epoll.Add(conn); err != nil {
+	service.Conn = conn
+	if err := ctrl.Epoll.Add(service); err != nil {
 		log.Println("Failed to add connection: ", err)
 		conn.Close()
 		return nil, err
 	}
-	return conn, nil
+	return &service, nil
 }
